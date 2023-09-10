@@ -101,28 +101,27 @@ if __name__ == "__main__":
         print("Press '3' to test 3")
         print("\nPress 's' to send a message to CAN BUS or press 'q' to Quit\n")
         pressedKey = getch()
-        match(pressedKey):
-            case 's':
-                send_one(msg = can.Message(
-                    arbitration_id = msgToSend[random.randrange(0, len(msgToSend) - 1)][1], 
-                    data = [random.randint(0, 254), 
-                            random.randint(0, 254), 
-                            random.randint(0, 254), 
-                            random.randint(0, 254), 
-                            random.randint(0, 254), 
-                            random.randint(0, 254), 
-                            random.randint(0, 254), 
-                            random.randint(0, 254)], 
-                    is_extended_id = True)
-                )
-            case '1': 
-                attackOne(msgToSend)
-            case '2':
-                attackTwo(msgToSend)
-            case '3':
-                attackThree(msgToSend)     
-            case 'q':    
-                systems.exit()
-            case _:
-                print ("\nKey Pressed:" + str(pressedKey))
+        if pressedKey == 's':
+            send_one(msg = can.Message(
+                arbitration_id = msgToSend[random.randrange(0, len(msgToSend) - 1)][1], 
+                data = [random.randint(0, 254), 
+                        random.randint(0, 254), 
+                        random.randint(0, 254), 
+                        random.randint(0, 254), 
+                        random.randint(0, 254), 
+                        random.randint(0, 254), 
+                        random.randint(0, 254), 
+                        random.randint(0, 254)], 
+                is_extended_id = True)
+            )
+        elif pressedKey == '1': 
+            attackOne(msgToSend)
+        elif pressedKey == '2':
+            attackTwo(msgToSend)
+        elif pressedKey == '3':
+            attackThree(msgToSend)     
+        elif pressedKey == 'q':    
+            systems.exit()
+        else:
+            print ("\nKey Pressed:" + str(pressedKey))
     
