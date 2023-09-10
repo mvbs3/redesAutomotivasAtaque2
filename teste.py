@@ -55,9 +55,9 @@ def attackOne(msgToSend):
                     random.randint(0, 254)], 
             is_extended_id = True)
         )
-    actual = time.time()
-    if((actual - prev) > 60.0):
-        stop = False
+        actual = time.time()
+        if((actual - prev) > 60.0):
+            stop = False
 
 def attackTwo(msgToSend):
     prev = time.time()
