@@ -94,7 +94,7 @@ def attackThree(msgToSend):
             stop = False
 
 if __name__ == "__main__":
-    #infoGet()
+    infoGet()
     while True:
         print("Press '1' to test 1")
         print("Press '2' to test 2")
