@@ -67,7 +67,7 @@ def attackTwo(msgToSend):
             msg = can.Message(
                 arbitration_id = msgToSend[i][1], data = msgToSend[i][2], is_extended_id = True
             )
-            time.sleep(msgToSend[i+1][0] * 0.98)
+            time.sleep(msgToSend[i + 1][0] * 0.98)
             send_one(msg)
         actual = time.time()
         if((actual - prev) > 60.0):
