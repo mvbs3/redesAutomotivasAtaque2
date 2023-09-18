@@ -12,6 +12,7 @@ from can.interface import Bus
 msgToSend = []
 extendIt = False
 saveAttackString = []
+tempo = 30.0
 
 def saveAttackInfo(msg):
     saveAttackString.append(msg)
@@ -68,7 +69,7 @@ def attackOne(msgToSend):
             is_extended_id = extendIt)
         )
         actual = time.time()
-        if((actual - prev) > 60.0):
+        if((actual - prev) > tempo):
             stop = False
 
 def attackTwo(msgToSend):
@@ -82,7 +83,7 @@ def attackTwo(msgToSend):
             time.sleep(msgToSend[i + 1][0] * 0.98)
             send_one(msg)
         actual = time.time()
-        if((actual - prev) > 60.0):
+        if((actual - prev) > tempo):
             stop = False
 
 def attackThree(msgToSend):
@@ -104,7 +105,7 @@ def attackThree(msgToSend):
             saveAttackInfo({"id": msgToSend[0][1], "msg": dataToSend})
 
         actual = time.time()
-        if((actual - prev) > 60.0):
+        if((actual - prev) > tempo):
             stop = False
     saveAttackOnFile()
 
